@@ -46,10 +46,9 @@ pip install -r requirements.txt
 ### Requirements
 
 ```
+Python:** 3.8 or higher
 requests>=2.28.0
 ```
-
-**Python:** 3.8 or higher
 
 ---
 
