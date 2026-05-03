@@ -1,7 +1,7 @@
 # ReconX — Web Server Reconnaissance Tool
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-2.0-cyan?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/version-1.0-cyan?style=for-the-badge" />
   <img src="https://img.shields.io/badge/python-3.8+-blue?style=for-the-badge&logo=python" />
   <img src="https://img.shields.io/badge/license-MIT-green?style=for-the-badge" />
   <img src="https://img.shields.io/badge/platform-Linux%20%7C%20macOS%20%7C%20Windows-lightgrey?style=for-the-badge" />
