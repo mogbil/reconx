@@ -32,7 +32,6 @@
 | **Port Scanning** | Scans 30+ ports including FTP, SSH, SMTP, MySQL, cPanel, and more |
 | **Endpoint Discovery** | Probes sensitive paths like `/.env`, `/.git/HEAD`, `/phpinfo.php` |
 | **Risk Scoring** | Weighted 0–100 risk score with CRITICAL / HIGH / MEDIUM / LOW levels |
-| **Admin Dashboard** | Web interface to view scan logs and full reports |
 
 ---
 
@@ -212,11 +211,11 @@ python reconx.py example.com -r 5
 
 | Country | Key Law | Notes |
 |---------|---------|-------|
-| 🇺🇸 USA | CFAA (Computer Fraud and Abuse Act) | Unauthorized scanning is a federal crime |
-| 🇪🇺 EU | NIS2 Directive | Reconnaissance tools may be restricted |
-| 🇸🇦 Saudi Arabia | Anti-Cybercrime Law | Requires official authorization |
-| 🇦🇪 UAE | Federal Law No. 5/2012 | Similar restrictions apply |
-| 🇬🇧 UK | Computer Misuse Act 1990 | Unauthorized access is prohibited |
+| USA | CFAA (Computer Fraud and Abuse Act) | Unauthorized scanning is a federal crime |
+| EU | NIS2 Directive | Reconnaissance tools may be restricted |
+| Saudi Arabia | Anti-Cybercrime Law | Requires official authorization |
+| UAE | Federal Law No. 5/2012 | Similar restrictions apply |
+| UK | Computer Misuse Act 1990 | Unauthorized access is prohibited |
 
 ### What is Allowed
 - Scanning servers you **own or manage**
