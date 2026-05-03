@@ -39,6 +39,7 @@
 ## Installation
 
 ```bash
+git clone https://github.com/mogbil/reconx.get
 cd client
 pip install -r requirements.txt
 ```
