@@ -39,7 +39,7 @@
 ## Installation
 
 ```bash
-git clone https://github.com/mogbil/reconx.get
+git clone https://github.com/mogbil/reconx.git
 cd client
 pip install -r requirements.txt
 ```
