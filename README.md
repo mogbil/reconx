@@ -4,6 +4,8 @@
   <img src="https://reconx.wondtech.com/reconx.png" alt="ReconX" width="400" />
 </p>
 
+**ReconX v1.0**
+
 <p align="center">
   <img src="https://img.shields.io/badge/version-1.0-cyan?style=for-the-badge" />
   <img src="https://img.shields.io/badge/python-3.8+-blue?style=for-the-badge&logo=python" />
@@ -11,7 +13,7 @@
   <img src="https://img.shields.io/badge/platform-Linux%20%7C%20macOS%20%7C%20Windows-lightgrey?style=for-the-badge" />
 </p>
 
-> **ReconX** is an advanced passive reconnaissance tool for web servers. It performs deep analysis across control panel detection, SSL/TLS, HTTP headers, DNS enumeration, WAF/CDN fingerprinting, port scanning, endpoint discovery, and more — all in a single run.
+> **ReconX** is an advanced passive reconnaissance tool for web servers. It performs deep analysis across control panel detection, SSL/TLS, HTTP headers, DNS enumeration, WAF/CDN fingerprinting, port scanning, endpoint discovery, technology fingerprinting, and more — all in a single run.
 
 ---
 
@@ -26,11 +28,16 @@
 | **HTTP Headers Audit** | Security headers audit (HSTS, CSP, X-Frame-Options…), server fingerprinting |
 | **WAF / CDN Detection** | Identifies Cloudflare, Sucuri, Akamai, Incapsula, Imunify360, and more |
 | **Cloudflare Real IP** | Bypasses Cloudflare to discover origin server IP |
-| **DNS & Subdomain Enum** | Resolves A, AAAA, MX, NS, TXT, CNAME records — enumerates common subdomains |
+| **DNS & Subdomain Enum** | Resolves A, MX, NS records — enumerates common subdomains |
 | **DNS Zone Transfer Check** | Detects if DNS zone transfer is vulnerable |
 | **Certificate Transparency** | Discovers subdomains via crt.sh logs |
-| **Port Scanning** | Scans 30+ ports including FTP, SSH, SMTP, MySQL, cPanel, and more |
+| **Port Scanning** | Scans 14 critical ports including FTP, SSH, MySQL, cPanel, and more |
 | **Endpoint Discovery** | Probes sensitive paths like `/.env`, `/.git/HEAD`, `/phpinfo.php` |
+| **Technology Fingerprint** | Identifies backend (Nginx, Apache, IIS), frontend (React, Vue, Angular), frameworks (Laravel, Django, Express), languages, and CDN |
+| **Hosting / Geolocation** | IP location, country, city, hosting provider, and ASN |
+| **Page Speed Metrics** | TTFB (Time To First Byte), page size, redirect count |
+| **S3 Bucket Enumeration** | Detects exposed AWS S3 buckets |
+| **OpenAPI / Swagger Detection** | Finds API documentation endpoints |
 | **Risk Scoring** | Weighted 0–100 risk score with CRITICAL / HIGH / MEDIUM / LOW levels |
 
 ---
@@ -38,16 +45,17 @@
 ## Installation
 
 ```bash
-git clone https://github.com/mogbil/reconx.git
 cd client
 pip install -r requirements.txt
 ```
 
 ### Requirements
 
+**Python:** 3.8 or higher
+
 ```
-Python>=3.8
 requests>=2.28.0
+aiohttp>=0.99.0 (optional, for async mode)
 ```
 
 ---
@@ -75,6 +83,9 @@ python reconx.py example.com --url https://custom-domain.com
 
 # Retry on failure
 python reconx.py example.com -r 5
+
+# Force sync mode (no aiohttp)
+python reconx.py example.com --sync
 ```
 
 ### Options
@@ -86,36 +97,44 @@ python reconx.py example.com -r 5
 | `-o, --output FILE` | Save output to file |
 | `--url URL` | Override base URL |
 | `-r, --retry N` | Number of retry attempts (default: 3) |
+| `--sync` | Force sync mode (no aiohttp) |
 
 ---
 
 ## Sample Output
 
 ```
-  ____                     __  __
- |  _ \ ___  ___ ___  _ __ \ \/ /
- | |_) / _ \/ __/ _ \| '_ \ \  /
- |  _ <  __/ (_| (_) | | | |/  \
- |_| \_\___|\___\___/|_| |_/_/\_\
-
-        ════════════════════════════════════════════════════════════════
-
-                  [ Web Server Reconnaissance Tool ]
-                  [ Version 1.0  |  Client Edition ]
-                  [ By Mogbil Sourketti  |  info@wondtech.com ]
-
-        ════════════════════════════════════════════════════════════════
-
-
-  [ReconX] Sending request to server …
-
 ──────────────────────────────────────────────────────
   TARGET
 ──────────────────────────────────────────────────────
   URL                   https://example.com
   Host                  example.com
-  Scan ID               rx_65abc1234.5678
-  Duration              12.5s
+  Duration              3.2s
+
+──────────────────────────────────────────────────────
+  RISK ASSESSMENT
+──────────────────────────────────────────────────────
+
+  Score: 55/100  [HIGH]
+  [██████████░░░░░░░░░░░]
+
+     +20  No WAF/CDN protection
+       +5  AWS hosting - check for S3 buckets
+       +5  cPanel detected
+     +10  WordPress: CVE-2024-3144 [critical]
+
+──────────────────────────────────────────────────────
+  SSL / TLS
+──────────────────────────────────────────────────────
+  Grade                 A
+  Issuer                Let's Encrypt
+  Subject               example.com
+  Days Until Exp.       45
+
+──────────────────────────────────────────────────────
+  WAF / CDN
+──────────────────────────────────────────────────────
+  ✘ No WAF/CDN Detected
 
 ──────────────────────────────────────────────────────
   CONTROL PANEL
@@ -128,39 +147,62 @@ python reconx.py example.com -r 5
   ⚠ CVE-2022-44824 [high]
 
 ──────────────────────────────────────────────────────
-  WAF / CDN
-──────────────────────────────────────────────────────
-  Protection            Cloudflare
-  Real IP               192.168.1.1 (via MX record)
-
-──────────────────────────────────────────────────────
-  SSL / TLS
-──────────────────────────────────────────────────────
-  Grade                 A+
-  Issuer                Let's Encrypt
-  Days Until Exp.       87
-
-──────────────────────────────────────────────────────
-  CMS
-──────────────────────────────────────────────────────
-  Type                  WordPress
-  Vulnerabilities:
-  ⚠ CVE-2024-3144 [critical]
-
-──────────────────────────────────────────────────────
   DNS ZONE TRANSFER
 ──────────────────────────────────────────────────────
   Status                Secure (blocked)
 
 ──────────────────────────────────────────────────────
-  RISK ASSESSMENT
+  OPEN PORTS
 ──────────────────────────────────────────────────────
-  Score: 42/100  [MEDIUM]
-  [████████░░░░░░░░░░░░]
+  HTTP      :80
+  HTTPS     :443
+  SSH       :22
+  cPanel    :2082
+  cPanel SSL:2083
 
-     +20  cPanel detected
-       ✔  WAF present
-       ✔  TLS grade A+
+──────────────────────────────────────────────────────
+  CMS DETECTION
+──────────────────────────────────────────────────────
+  CMS                  WordPress
+  Version              6.4.3
+
+  Vulnerabilities:
+  ⚠ CVE-2024-3144 [critical]
+
+──────────────────────────────────────────────────────
+  TECHNOLOGY STACK
+──────────────────────────────────────────────────────
+  Backend              Nginx
+  Frontend              React
+
+  Frameworks:
+  • Laravel
+
+  Languages:
+  • PHP
+  • JavaScript
+
+  CDN:
+  ✔ Cloudflare
+  ✔ CloudFront
+
+──────────────────────────────────────────────────────
+  HOSTING / GEOLOCATION
+──────────────────────────────────────────────────────
+  IP                   192.168.1.1
+  Country              US
+  City                 Ashburn
+  Provider             AWS
+  ASN                  AS12345
+
+──────────────────────────────────────────────────────
+  PERFORMANCE
+──────────────────────────────────────────────────────
+  TTFB                 145.32 ms
+  Page Size            45,231 bytes
+  Redirects            0
+
+════════════════════════════════════════════════════════════
 ```
 
 ---
@@ -192,6 +234,18 @@ python reconx.py example.com -r 5
 | PrestaShop | /admin/, /modules/ | CVE-2023-39517, CVE-2022-0190 |
 | OpenCart | /admin/, /catalog/view/ | CVE-2023-36325 |
 | WooCommerce | /checkout/, /cart/ | CVE-2023-28154 |
+
+---
+
+## Technology Detection
+
+| Category | Detected Technologies |
+|----------|------------------------|
+| **Backend** | Nginx, Apache, IIS, LiteSpeed, OpenResty, Node.js |
+| **Frontend** | React, Vue.js, Angular, Next.js, Nuxt, Svelte, jQuery |
+| **Frameworks** | Laravel, Django, Flask, FastAPI, Express, Symfony, CodeIgniter |
+| **Languages** | PHP, Python, Node.js, Ruby, Java, ASP.NET |
+| **CDN** | Cloudflare, Akamai, Fastly, CloudFront, Azure CDN, Google Cloud CDN |
 
 ---
 
