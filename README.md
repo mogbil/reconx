@@ -227,12 +227,6 @@ python reconx.py example.com -r 5
 - Attempting to bypass security measures (WAF/CDN bypass)
 - Using scan results for **malicious purposes**
 
-### Secure Deployment
-If deploying this tool publicly:
-- Use HTTPS for all communications
-- Monitor and log all scan activity
-- Restrict access to authorized personnel only
-
 ---
 
 ## License
